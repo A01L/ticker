@@ -469,9 +469,7 @@ class Session {
 	public $name;
 
 	//Create new Session
-	public function new($id, $key = 'none'){
-		$name = $this->name;
-
+	public static function new($name, $id, $key = 'none'){
 		$_SESSION["$name"] = [
             "id" => $id,
             "key" => $key,
@@ -492,8 +490,7 @@ class Session {
 	}
 
 	//Route if have Session
-	public function yes($locate){
-		$name = $this->name;
+	public static function yes($name, $locate){
 		if ($_SESSION["$name"]) {
     		header('Location: '.$locate);
 		}

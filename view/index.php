@@ -1,296 +1,283 @@
 <?php
-if(isset($_POST['follow'])){
-    $ch = DBC::select('followers', 'email', $_POST['follow'], 'id');
-    if(!$ch){
-        DBC::insert('followers', array('email'=>$_POST['follow']));
-    }
+if($_GET['type']=='add'){
+    $data['title']  = $_POST['title'];
+    $data['date']   = $_POST['date'];
+    $data['time']   = $_POST['time'];
+    DBC::insert('events', $data);
+    Router::redirect('/');
+}
+elseif(isset($_GET['dell'])){
+    DBC::delete('book', 'eid', $_GET['dell']);
+    DBC::delete('events', 'id', $_GET['dell']);
     Router::redirect('/');
 }
 ?>
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Globe Trekk - HTML Traveling Template">
+    <head>
+        <meta charset="utf-8" />
+        <title> Ticker - Panel</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="MyraStudio" name="author" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>Ticker | Ваша карманная касса</title>
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="public/assets/images/favicon.ico">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="public/assets/media/favicon.png">
+        <!-- App css -->
+        <link href="public/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="public/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="public/assets/css/theme.min.css" rel="stylesheet" type="text/css" />
 
-    <!-- All CSS files -->
-    <link rel="stylesheet" href="public/assets/css/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="public/assets/css/vendor/all.min.css">
-    <link rel="stylesheet" href="public/assets/css/vendor/ion.rangeSlider.css">
-    <link rel="stylesheet" href="public/assets/css/vendor/slick.css">
-    <link rel="stylesheet" href="public/assets/css/vendor/nice-select.css">
-    <link rel="stylesheet" href="public/assets/css/app.css">
+    </head>
 
-</head>
+    <body>
 
-<body id="body" class="x-hidden ui-transition">
-    <!-- Preloader-->
-    <div id="preloader">
-        <div class="loader">
-            <div class="plane">
-                <img src="public/assets/media/icons/loader-plane.png" class="plane-img" alt="">
-            </div>
-            <div class="earth-wrapper">
-                <div class="earth"></div>
-            </div>
-        </div>
-    </div>
-    <!--  Begin scroll container -->
-    <div id="scroll-wrapper">
-        <div id="smooth-content">
-            <main>
-                <?php
-                require_once "view/block/nav.php";
-                ?>
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+            <div class="header-border"></div>
+            <header id="page-topbar">
+                <div class="navbar-header">
 
-                <!-- Hero Section Start -->
-                <section class="hero-banner-1 banner-content-parallax" id="hero">
-                    <div class="container-fluid">
-                        <h1 class="title banner-caption-title ph-appear">TICKER</h1>
-                        <div class="content">
-                            <div class="text-center sub-title">
-                                <h3 class="font-sec color-white">Take your ticket too!</h3>
+                    <div class="d-flex align-items-left">
+                        <button type="button" class="btn btn-sm mr-2 d-lg-none px-3 font-size-16 header-item waves-effect"
+                            id="vertical-menu-btn">
+                            <i class="fa fa-fw fa-bars"></i>
+                        </button>
+
+                    
+                    </div>
+
+                    <div class="d-flex align-items-center">
+
+                
+                        <div class="dropdown d-inline-block ml-2">
+                            <button type="button" class="btn header-item waves-effect"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="rounded-circle header-profile-user" src="public/assets/images/users/avatar-2.jpg"
+                                    alt="Header Avatar">
+                                <span class="d-none d-sm-inline-block ml-1"><?=DBC::select('users', 'id', $_SESSION['user']['id'], 'name')?></span>
+                                <i class="mdi mdi-chevron-down d-none d-sm-inline-block"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item d-flex align-items-center justify-content-between"
+                                    href="?logout=true">
+                                    <span>Выйти</span>
+                                </a>
                             </div>
-                            <form action="grid" method="get">
-                                <input type="text" readonly hidden value="true" name="filter">
-                                <div class="find-banner-row">
-                                    <div class="form-group white-input">
-                                        <select name="type" class="has-nice-select cus-form-control">
-                                            <option selected="selected" disabled="disabled">Куда?</option>
-                                            <option value="concert">Концерт</option>
-                                            <option value="sport">Спорт</option>
-                                            <option value="film">Фильм</option>
-                                        </select>
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+
+            <!-- ========== Left Sidebar Start ========== -->
+            <div class="vertical-menu">
+
+                <div data-simplebar class="h-100">
+
+                    <div class="navbar-brand-box">
+                        <a href="/" class="logo">
+                            <i class="mdi mdi-album"></i>
+                            <span>
+                                Ticker
+                            </span>
+                        </a>
+                    </div>
+
+                    <!--- Sidemenu -->
+                    <div id="sidebar-menu">
+                        <!-- Left Menu Start -->
+                        <ul class="metismenu list-unstyled" id="side-menu">
+                            <li class="menu-title">Панель   </li>
+
+                            <li>
+                                <a href="/" class="waves-effect"><i class="mdi mdi-home-analytics"></i><span>Событии</span></a>
+                            </li>
+
+                            <li>
+                                <a href="list" class="waves-effect"><i
+                                        class="mdi mdi-format-list-bulleted-type"></i><span>Резерв</span></a>
+                            </li>
+
+                            <li class="menu-title">Превью</li>
+
+
+                            <li>
+                                <a href="book" target="_blank" class=" waves-effect"><i
+                                        class="mdi mdi-calendar-range-outline"></i><span>Резервирование</span>
+                                </a>
+                            </li>
+
+                
+
+                        </ul>
+                    </div>
+                    <!-- Sidebar -->
+                </div>
+            </div>
+            <!-- Left Sidebar End -->
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0 font-size-18">Главная</h4>
+
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Ticker</a></li>
+                                            <li class="breadcrumb-item active">Главная</li>
+                                        </ol>
                                     </div>
-                                    <div class="form-group white-input">
-                                        <select name="age" class="has-nice-select cus-form-control">
-                                            <option selected="selected" disabled="disabled">Возраст?</option>
-                                            <option value="7">7</option>
-                                            <option value="12">12</option>
-                                            <option value="16">16</option>
-                                            <option value="18">18</option>
-                                            <option value="21">21</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group white-input">
-                                        <select name="price" class="has-nice-select cus-form-control">
-                                            <option selected="selected" disabled="disabled">Цена?</option>
-                                            <option value="5000">до 5000</option>
-                                            <option value="10000">до 10000</option>
-                                            <option value="30000">до 30000</option>
-                                            <option value="60000">до 60000</option>
-                                            <option value="10000000">Неограничено</option>
-                                        </select>
-                                    </div>
-                                    <div class="ui-btn ui-btn-primary">
-                                        <button type="submit" data-hover="НАЙТИ">НАЙТИ</button>
-                                    </div>
+
                                 </div>
-                            </form>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+
+                        <div class="col-xl-6">
+                            <div class="card">
+                                <div class="card-body">
+                    
+                                    <h4 class="card-title">Новая события</h4>
+                                    <p class="card-subtitle mb-4">Заполните форму для создании новой событии.</p>
+
+                                    <form action="/?type=add" method="post">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Заголовок</label>
+                                            <input type="text" name="title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите заголовок">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Дата</label>
+                                            <input type="date" name="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите заголовок">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Время</label>
+                                            <input type="time" name="time" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите заголовок">
+                                        </div>
+                                        <button class="btn btn-primary waves-effect waves-light">Добавить событию</button>
+                                    </form>
+                    
+                                </div> <!-- end card-body-->
+                            </div> <!-- end card-->
+                        </div>
+
+                             <div class="col-xl-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Список событии</h4>
+                                        <p class="card-subtitle mb-4"> Все событии в списке счтиаются актуальными до момента удалении.</p>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-striped mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>События</th>
+                                                        <th>Дата</th>
+                                                        <th>Время</th>
+                                                        <th>Действия</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    $result = DBC::show('events');
+                                                    $i      = 1;
+                                                    foreach($result as $row){
+                                                        ?>
+                                                    <tr>
+                                                        <th scope="row"><?=$i++?></th>
+                                                        <td><?=$row['title']?></td>
+                                                        <td><?=$row['date']?></td>
+                                                        <td><?=$row['time']?></td>
+                                                        <td><a href="?dell=<?=$row['id']?>">Удалить</a></td>
+                                                    </tr>
+                                                        <?
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div> <!-- end table-responsive-->
+                                    </div>
+                                    <!-- end card-body-->
+                                </div>
+                                <!-- end card -->
+                            </div>
+                        </div>
+                        <!-- end row-->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                2024 © Ticker.
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-right d-none d-sm-block">
+                                Developed by Kenjalin Didar Kasenuly
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <img src="public/assets/media/banner/mask-layer.png" alt="" class="mask-layer mask-layer-desktop">
-                    <img src="public/assets/media/banner/tabmask.png" alt="" class="mask-layer mask-layer-tab">
-                    <img src="public/assets/media/banner/mobilemask.png" alt="" class="mask-layer mask-layer-phone">
-                </section>
-                <!-- Hero Section End --> 
+                </footer>
 
-                <div class="about-trigger-1" id="page-content">
-                    <!-- About Section Start -->
-                    <section class="about-features-1 about-1 position-relative z-2">
-                        <div class="container-fluid">
-                            <div class="all-content">
-                                <div class="row align-items-center">
-                                    <div class="col-xl-6 col-md-7">
-                                        <div class="text-block text-md-start text-center">
-                                            <h3 class="mb-8 font-sec color-primary">Цитата :</h3>
-                                            <h3 class="mb-24">
-                                            Билет — это не просто кусочек бумаги, это ключ к приключению, путешествию в мир возможностей и новых открытий!</h3>
-                                            <div class="ui-btn ui-btn-primary mx-auto ms-md-0">
-                                                <a href="grid" data-hover="КУПИТЬ БИЛЕТЫ">КУПИТЬ БИЛЕТЫ</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-md-5">
-                                        <div class="images-area">
-                                            <div class="images-block">
-                                                <div class="about-img-card box-blur-bg v-1">
-                                                    <img src="public/assets/media/about/about-img-1.png" alt="" class="b-radius-20">
-                                                </div>
-                                                <div class="about-img-card box-blur-bg v-2">
-                                                    <img src="public/assets/media/about/about-img-2.png" alt="" class="b-radius-20">
-                                                </div>
-                                                <div class="about-img-card box-blur-bg v-3">
-                                                    <img src="public/assets/media/about/about-img-3.png" alt="" class="b-radius-20">
-                                                </div>
-                                                <div class="about-img-card box-blur-bg v-4">
-                                                    <img src="public/assets/media/about/about-img-4.png" alt="" class="b-radius-20">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <!-- About Section End -->
+            </div>
+            <!-- end main content-->
 
-                    <!-- Tour List Start -->
-                    <section class="position-relative z-2 py-64">
-                        <div class="container-fluid">
-                            <div class="heading mb-48">
-                                <h3 class="font-sec color-primary">Список мероприятии :</h3>
-                                <h2>Для вас</h2>
-                            </div>
-                            <div class="row mb-16">
-                                <?php
-                                $events = DBC::show('events');
-                                $i = 0;
-                                foreach($events as $event){
-                                    if($i<4){
-                                    ?>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="tour-card mb-32">
-                                            <img src="public/assets/uploads/<?=$event['img']?>" alt="" class="tour-img">
-                                            <div class="card-info">
-                                                <a href="tour-detail?id=<?=$event['id']?>" class="h5"><?=$event['title']?></a>
-                                                <div class="location"><i class="fa-light fa-location-crosshairs"></i><h6><?=$event['addres']?></h6></div>
-                                                <div class="info-detail">
-                                                    <ul class="unstyled">
-                                                        <li><i class="fa-light fa-calendar"></i><p><?=$event['date']?></p></li>
-                                                        <li><i class="fa-solid fa-period dot"></i></li>
-                                                    </ul>
-                                                    <div class="right-block">
-                                                        <h6><?=$event['price']?> ₸</h6>
-                                                        <a href="tour-detail?id=<?=$event['id']?>" class="ui-link-arrow"><i class="fa-light fa-arrow-right arrow" ></i></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php
-                                    }
-                                    $i++;
-                                }
-                                ?>
-                            </div>
-                            <div class="text-center">
-                                <div class="ui-btn ui-btn-primary">
-                                    <a href="grid" data-hover="ПОЛНЫЙ СПИСОК">ПОЛНЫЙ СПИСОК</a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <!-- Tour List End -->
-
-                    <!-- Discount Banner Start -->
-                    <section class=" position-relative z-2 py-64">
-                        <div class="container-fluid">
-                            <div class="box-blur-bg">
-                                <div class="discount-banner b-radius-20">
-                                    <div class="row">
-                                        <div class="col-lg-6 order-lg-1 order-2">
-                                            <div class="img-block text-center">
-                                                <img src="public/assets/media/banner/dicount-banner/main-object.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 order-lg-2 order-1">
-                                            <div class="content">
-                                                <div class="text-block">
-                                                    <div class="title-block">
-                                                        <div class="discount-tag">
-                                                            <h2 class="color-white">30%</h2>
-                                                            <h4 class="color-white">СКИДКА</h4>
-                                                        </div>
-                                                        <h1 class="mb-16 color-white position-relative z-3">ИНТЕРЕСНО?</h1>
-                                                    </div>
-                                                    <h5 class="mb-16 color-primary">СКИДКА ЕСЛИ ЗАБРОНИРУЕТЕ СЕЙЧАС</h5>
-                                                    <p class="mb-48 color-white">Купите билет прямо сейчас на любое мероприятие и вам будет скидка до 30%. <br> Данная акция действует до 20 августа.</p>
-                                                    <div class="ui-btn ui-btn-primary">
-                                                        <a href="grid" data-hover="СЕЙЧАС">КУПИТЬ БИЛЕТ</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <!-- Discount Banner End -->
-
-                    <!-- Gallery Start -->
-                    <section class="py-64">
-                        <div class="heading mb-48">
-                            <h2>Наша Галлерея</h2>
-                        </div>
-                        <div class="gallery-slider">
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_1.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_2.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_3.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_4.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_5.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_6.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_1.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_2.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_3.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_4.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_5.png" alt=""></a>
-                            <a href="#" class="gallery-img-block"><img src="public/assets/media/gallery/gallery_6.png" alt=""></a>
-                        </div>
-                    </section>
-                    <!-- Gallery End -->
-                </div>
-
-                <?php
-                    require_once "view/block/footer.php";
-                ?>
-
-    
-            </main>
         </div>
-        <!-- End content wrap -->
-    </div>
-    <!-- End scroll container -->
+        <!-- END layout-wrapper -->
 
-    <!-- Search Popup Start -->
-    <div class="search-popup">
-        <div class="search-popup__overlay search-toggler"></div>
-        <div class="search-popup__content text-center">
-            <form role="search" method="get" class="search-popup__form" action="grid">
-                <div class="blur-layer">
-                    <input type="text" id="search" name="search" autocomplete="off" placeholder="Введите запрос...">
-                </div>
-                <button type="submit"><i class="fal fa-search"></i></button>
-            </form>
-        </div>
-    </div>
-    <!-- Search Popup End -->
+        <!-- Overlay-->
+        <div class="menu-overlay"></div>
 
 
+        <!-- jQuery  -->
+        <script src="public/assets/js/jquery.min.js"></script>
+        <script src="public/assets/js/bootstrap.bundle.min.js"></script>
+        <script src="public/assets/js/metismenu.min.js"></script>
+        <script src="public/assets/js/waves.js"></script>
+        <script src="public/assets/js/simplebar.min.js"></script>
 
-  
-    <!-- Jquery Js -->
-    <script src="public/assets/js/vendor/jquery-3.6.3.min.js"></script>
-    <script src="public/assets/js/vendor/bootstrap.min.js"></script>
-    <script src="public/assets/js/vendor/gsap.min.js"></script>
-    <script src="public/assets/js/vendor/scrollTrigger.min.js"></script>
-    <script src="public/assets/js/vendor/ScrollToPlugin.min.js"></script>
-    <script src="public/assets/js/vendor/ScrollSmoother.min.js"></script>
-    <script src="public/assets/js/vendor/jquery-appear.js"></script>
-    <script src="public/assets/js/vendor/ion.rangeSlider.js"></script>
-    <script src="public/assets/js/vendor/jquery.nice-select.min.js"></script>
-    <script src="public/assets/js/vendor/slick.min.js"></script>
-    <script src="public/assets/js/app.js"></script>
 
-</body>
+        <!-- Sparkline Js-->
+        <script src="public/../plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+
+        <!-- Chart Js-->
+        <script src="public/../plugins/jquery-knob/jquery.knob.min.js"></script>
+
+        <!-- Chart Custom Js-->
+        <script src="public/assets/pages/knob-chart-demo.js"></script>
+
+
+        <!-- Morris Js-->
+        <script src="public/../plugins/morris-js/morris.min.js"></script>
+
+        <!-- Raphael Js-->
+        <script src="public/../plugins/raphael/raphael.min.js"></script>
+
+        <!-- Custom Js -->
+        <script src="public/assets/pages/dashboard-demo.js"></script>
+
+        <!-- App js -->
+        <script src="public/assets/js/theme.js"></script>
+
+    </body>
 
 </html>

@@ -1,11 +1,17 @@
 <?php
 require_once "ectr/main.php";
 
-Router::get('/', 'index.php');
-Router::get('/contact', 'contact-us.php');
-Router::get('/grid', 'tour-grid.php');
-Router::get('/tour-detail', 'detail.php');
-Router::get('/add', 'add-tour.php');
+if(isset($_GET['logout'])){
+    Session::close('user');
+}
+   
+Router::get('/', 'login.php');
+if($_SESSION['user']['id']){
+    Router::get('/', 'index.php');
+    Router::get('/list', 'list.php');
+}
+
+Router::get('/book', 'book.php');
 
 // Activate routing 
 Router::on();

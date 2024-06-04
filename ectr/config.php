@@ -12,7 +12,7 @@ ini_set('session.cookie_lifetime', 172800);
 //Main config for ECTR
 $ectr_protcol="http";
 $ectr_host="localhost";
-$ectr_db="nj";
+$ectr_db="tst";
 $ectr_login="root";
 $ectr_password="root";
 $ectr_charset = "utf8";
